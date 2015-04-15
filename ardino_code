@@ -1,0 +1,128 @@
+/*************************************************************************************************
+pinout
+pin-description-colour
+5v=gunVcc=red
+gnd=gnd=allblack
+A0=cap=yellow
+A1=shirt=yellow
+2=gunbutton=yellow
+3=gunresponse=blue
+4=capVcc=red
+5=shirtVcc=red
+6=capvibrator=green
+7=shirtVibrator=green
+
+
+**************************************************************************************************/
+
+
+
+int ammo=50;
+int lastButtonState = 0;
+int buttonState = 0;
+int cap=0;
+int shirt=0;
+int score=0;
+int health=100;
+
+void setup()
+{
+
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
+  pinMode(5,OUTPUT);
+  pinMode(6,OUTPUT);
+  pinMode(7,OUTPUT);
+  pinMode(A0,INPUT);
+  pinMode(A1,INPUT);
+  pinMode(2,INPUT);
+ Serial.print("PLAYER   ");
+ Serial.print("SCORE   ");
+Serial.print("AMMO   ");
+
+Serial.println("HEALTH");
+Serial.println("------------------------------------------------------------");
+  Serial.begin(9600);
+}
+
+void loop()
+
+{ 
+  digitalWrite(4,HIGH);//power supply for cap
+  
+  digitalWrite(5,HIGH);//power supply for shirt
+  
+    buttonState = digitalRead(2);
+  //delay(500); //doubtful
+  //if (buttonState != lastButtonState)
+  //{
+  
+  
+    if(buttonState==HIGH && ammo>0)
+    {
+      digitalWrite(3,HIGH);
+
+      delay(1000);
+      digitalWrite(3,LOW);
+      ammo--;
+    }
+    
+  
+  
+  cap=analogRead(A0);
+  shirt=analogRead(A1);
+  
+  if(cap<250 || shirt<250)
+  {
+     if(cap<250)
+  { digitalWrite(6,HIGH);
+  delay(500);
+  digitalWrite(6,LOW);
+  }
+  if(shirt<250)
+  {
+    digitalWrite(7,HIGH);
+    delay(500);
+    digitalWrite(7,LOW);
+  }
+ score+=10;
+  ammo--;
+  health-=20;
+  
+  Serial.print("PLAYER   ");
+  Serial.print("SCORE   ");
+  Serial.print("AMMO   ");
+
+  Serial.println("HEALTH");
+  Serial.println("----------------------------------------------------");
+  Serial.print("DEV      ");
+  Serial.print(score);
+  Serial.print("      ");
+  Serial.print(ammo);
+  Serial.print("      ");
+
+  //Serial.print("      ");
+  //Serial.println("    100");
+    if(health<=0)
+  {
+  Serial.println("DEAD");
+  Serial.println(" ");
+  }
+  else
+  {
+  //Serial.print("       ");
+  Serial.println(health);
+  Serial.println(" ");
+  }
+  if(ammo<=0 || health<=0)
+  {
+    Serial.println("             GAME OVER!              ");
+    while(1);
+  }
+  }
+  
+
+  
+  
+  //lastButtonState=buttonState; 
+}
